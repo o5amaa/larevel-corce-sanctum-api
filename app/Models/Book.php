@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     use HasFactory;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function like()
+    {
+        return $this->hasMany(Like::class)->count();
+    }
+
+    public function comment()
+    {
+        return $this->hasMany(Comment ::class);
+    }
 }

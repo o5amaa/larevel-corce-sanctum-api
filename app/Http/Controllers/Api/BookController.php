@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Http\Resources\BookResource;
+use App\Http\Resources\BooksResource;
 use App\Models\Book;
 
 class BookController extends Controller
@@ -15,18 +18,13 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+
+        return BooksResource::collection(Book::with('user')->get());
+        // return BooksResource::collection(Book::paginate(10));
+        // return response()->json(Book::get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -47,19 +45,10 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return new BookResource($book);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Book $book)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
