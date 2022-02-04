@@ -99,6 +99,8 @@ class BookController extends Controller
 
         $book->delete();
 
-        return response()->json(['message'=> 'Book Deleted'],200);
+        // return response()->json(['message'=> ''],200);
+
+        return $this->jsonResponse('Book Deleted');
     }
 }

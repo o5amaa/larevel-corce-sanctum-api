@@ -5,66 +5,45 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLikeRequest;
 use App\Http\Requests\UpdateLikeRequest;
+use App\Models\Book;
 use App\Models\Like;
 
 class LikeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function like($bookId)
     {
-        //
+        $book = Book::findOrFail($bookId);
+
+        $data =
+            [
+                'book_id' => $book->id,
+                'user_id' => auth()->id(),
+            ];
+
+        Like::firstOrCreate($data, $data);
+
+        return $this->jsonResponse('Book Like');
+        // return response()->json(['message' => ''], 200);
+
+        // dd('ooooooooooooooooooooooo');
     }
 
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreLikeRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreLikeRequest $request)
+    public function dislike($bookId)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Like  $like
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Like $like)
-    {
-        //
-    }
+        // $like = Like::where('book_id', $bookId)->where('user_id', auth()->id())->firstOrFail();
+        // // dd($like);
+        // $like->delete();
 
+        Like::query()
+            ->whereBookId($bookId)
+            ->whereUserId(auth()->id())
+            ->firstOrFail()
+            ->delete();
 
+        // return response()->json(['message' => ''], 200);
+        return $this->jsonResponse('Book DisLike');
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateLikeRequest  $request
-     * @param  \App\Models\Like  $like
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateLikeRequest $request, Like $like)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Like  $like
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Like $like)
-    {
-        //
     }
 }
