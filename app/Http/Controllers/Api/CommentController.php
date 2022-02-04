@@ -5,21 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentsResource;
 use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -29,18 +19,12 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
+        $comment = auth()->user()->comments()->create($request->validated());
+
+        return new CommentsResource($comment);
+
+        // return response()->json(['message' => 'Added commente'], 200);
     }
 
 
@@ -52,9 +36,14 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(StoreCommentRequest $request, Comment $comment)
     {
-        //
+
+        $this->authorize('update', $comment);
+
+        $comment = tap($comment)->update($request->only('body'));
+
+        return new CommentsResource($comment);
     }
 
     /**
@@ -65,6 +54,11 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $this->authorize('delete', $comment);
+
+        $comment->delete();
+
+        return $this ->jsonResponse('commente deleted',201);
+
     }
 }
