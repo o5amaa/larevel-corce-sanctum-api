@@ -24,11 +24,12 @@ Route::prefix('v1')->group(function () {
         //
         Route::get('/user', [UserAuthController::class, 'user']);
         Route::post('/logout', [UserAuthController::class, 'logout']);
+        // Route::post('/books', [BookController::class,'store']);
     });
 });
 
 Route::fallback(function () {
     return response()->json([
-        'message'=> '404 | Page Not Found'
-    ],404);
+        'message' => '404 | Page Not Found'
+    ], 404);
 });
