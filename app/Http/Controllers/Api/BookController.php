@@ -79,6 +79,9 @@ class BookController extends Controller
      */
     public function update(StoreBookRequest $request, Book $book)
     {
+
+        $this->authorize('update',$book);
+
         // $updatedbook= tap($book)->update($request->validated());
         // dd($updatedbook);
         return new BookResource(tap($book)->update($request->validated()));
@@ -92,6 +95,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        $this->authorize('delete',$book);
+
         $book->delete();
 
         return response()->json(['message'=> 'Book Deleted'],200);
